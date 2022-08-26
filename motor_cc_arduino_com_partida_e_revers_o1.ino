@@ -18,20 +18,20 @@ int estado = 1;         // Estado de giro 1 = horario || 2 = anti horario
 
 bool ligado, desligado;	// Estado Ligado || Desligado
 
-/*LIGAR MOTOR*/   	void ligar()    {digitalWrite(motor, HIGH);}
-/*DESLIGAR MOTOR*/  void desligar()   {digitalWrite(motor, LOW);}
+/*LIGAR MOTOR*/   	void ligar()        {digitalWrite(motor, HIGH);}
+/*DESLIGAR MOTOR*/  void desligar()     {digitalWrite(motor, LOW);}
 /*INVERTER MOTOR*/  void antiHorario()  {digitalWrite(inverter1, HIGH); digitalWrite(inverter2, HIGH);}
-/*INVERTER MOTOR*/  void horario()    {digitalWrite(inverter1, LOW); digitalWrite(inverter2, LOW);}
-/*Fabrica D'Cores*/ void defineColor  (int r, int g, int b){digitalWrite(vm, r);digitalWrite(az, g);digitalWrite(vd, b);}
-/*Desligado*/     	void apagado()    {defineColor(0,0,0);}
-/*Verde*/       	void verde()    {defineColor(0,0,1);}
-/*Azul*/      		void azul()     {defineColor(0,1,0);}
-/*Ciano*/      		void ciano()    {defineColor(0,1,1);}
-/*Vermelho*/    	void vermelho()   {defineColor(1,0,0);}
-/*Amarelo*/     	void amarelo()    {defineColor(1,0,1);}
-/*Magenta*/     	void magenta()    {defineColor(1,1,0);}
-/*Branco*/      	void branco()   {defineColor(1,1,1);}
-/*Sinalizar ligado*/void piscar()   {if(estado == 2){azul(); delay(500); magenta(); delay(500);}else{amarelo(); delay(500); vermelho(); delay(500);}}
+/*INVERTER MOTOR*/  void horario()      {digitalWrite(inverter1, LOW); digitalWrite(inverter2, LOW);}
+/*Fabrica D'Cores*/ void defineColor    (int r, int g, int b) {digitalWrite(vm, r);digitalWrite(az, g);digitalWrite(vd, b);}
+/*Desligado*/     	void apagado()      {defineColor(0,0,0);} 
+/*Verde*/       	  void verde()        {defineColor(0,0,1);}
+/*Azul*/      		  void azul()         {defineColor(0,1,0);}
+/*Ciano*/      		  void ciano()        {defineColor(0,1,1);}
+/*Vermelho*/    	  void vermelho()     {defineColor(1,0,0);}
+/*Amarelo*/     	  void amarelo()      {defineColor(1,0,1);}
+/*Magenta*/     	  void magenta()      {defineColor(1,1,0);}
+/*Branco*/      	  void branco()       {defineColor(1,1,1);}
+/*Sinalizar ligado*/void piscar()       {if(estado == 2){azul(); delay(500); magenta(); delay(500);}else{amarelo(); delay(500); vermelho(); delay(500);}}
 
 void setup()
 {
