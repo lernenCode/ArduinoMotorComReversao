@@ -1,10 +1,9 @@
 # Arduino Motor CC Com Reversao
 
 # Diagrama
-![Motor CC Arduino com partida e reversão](https://user-images.githubusercontent.com/96671069/186791835-4c1e0855-9db2-457c-a96b-8954139f7fa0.png)
+![diagrama](https://user-images.githubusercontent.com/96671069/205163321-1efdd33f-8df3-422b-a141-7f6ac870ee1e.png)
 
 # Materiais
-
 |Componentes          |Quantidade |Nome       |
 |---                  |---        |---        |
 |Arduino Uno R3       |1          |         U1|
@@ -14,8 +13,8 @@
 |Resistor 220         |3          | R3, R5, R6|
 |Motor CC             |1          |         M1|
 |Fonte de energia 127 |1          |         P1|
-|Relé SPDT            |3          | K1, K2, K3|
+|Relé SPDT            |2          | K1, K2    |
 
 
-Link Do projeto no tinkerCAD
-https://www.tinkercad.com/things/17oiP30dq32-motor-cc-arduino-com-partida-e-reversao/editel?sharecode=8LgXsprbc-RKJuySVtvdHz_RYWXKrPCFz6Jf0UmnI9k
+#  Link Do projeto no tinkerCAD
+https://www.tinkercad.com/things/80ppFxyYJoj-motor-cc-com-reversao-lcd-led-rgb-arduino-/editel?sharecode=CpfNFtYsfaCnxRhSKVNG8uouJpfzLrdcOqV2ECpdLtM
