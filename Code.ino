@@ -1,74 +1,74 @@
-// AUTOR: LUIZ VINICIUS
-// DESCRIÇÃO: MOTOR 127V COM REVERSAO ARDUINO
-// DATA: 25/08/2022
+#include <LiquidCrystal.h>
 
-//Entradas
-int bt1 = 9, bt2 = 5, bt3 = 11; // botoes
-// Saidas
-int vm = 4;             //  LedRGB porta vermelha
-int az = 3;             //  LedRGB porta Azul
-int vd = 2;             //  LedRGB porta Verde
+const int rs = 12, en = 11,d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-int motor = 13;         // motor
-int inverter1 = 6;      // Fase + motor invertido
-int inverter2 = 7;      // Fase - motor invertido
+/*Val Saidas*/      
+int vm = 9;
+int az = 10;
+int vd = 13;
+int R1 = 1, R0 = 0;
 
-// Variaveis
-int estado = 1;         // Estado de giro 1 = horario || 2 = anti horario
+/*Val Entradas*/
+int btm1 = 7;
+int btm2 = 8;
 
-bool ligado, desligado;	// Estado Ligado || Desligado
+/*Val*/
+int stateOperation = 0; // ligado ou desligado
+int stateRotation = 0; // Horario ou Anti-Horario
+int stateButton1;	int stateButton2;
 
-/*LIGAR MOTOR*/   	void ligar()    {digitalWrite(motor, HIGH);}
-/*DESLIGAR MOTOR*/  void desligar()   {digitalWrite(motor, LOW);}
-/*INVERTER MOTOR*/  void antiHorario()  {digitalWrite(inverter1, HIGH); digitalWrite(inverter2, HIGH);}
-/*INVERTER MOTOR*/  void horario()    {digitalWrite(inverter1, LOW); digitalWrite(inverter2, LOW);}
-/*Fabrica D'Cores*/ void defineColor  (int r, int g, int b){digitalWrite(vm, r);digitalWrite(az, g);digitalWrite(vd, b);}
-/*Desligado*/     	void apagado()    {defineColor(0,0,0);}
-/*Verde*/       	void verde()    {defineColor(0,0,1);}
-/*Azul*/      		void azul()     {defineColor(0,1,0);}
-/*Ciano*/      		void ciano()    {defineColor(0,1,1);}
-/*Vermelho*/    	void vermelho()   {defineColor(1,0,0);}
-/*Amarelo*/     	void amarelo()    {defineColor(1,0,1);}
-/*Magenta*/     	void magenta()    {defineColor(1,1,0);}
-/*Branco*/      	void branco()   {defineColor(1,1,1);}
-/*Sinalizar ligado*/void piscar()   {if(estado == 2){azul(); delay(500); magenta(); delay(500);}else{amarelo(); delay(500); vermelho(); delay(500);}}
+/* toll to right*/  void rollRight()    {for (int positionCounter = 0; positionCounter < 16; positionCounter++) { lcd.scrollDisplayRight(); delay(100);}}
+/*Start*/           void start()   		{lcd.begin(16,2);lcd.setCursor(4,0);lcd.print("LERN-DEV");lcd.setCursor(2,1);lcd.print("LuizVinicius"); delay(1000); rollRight(); delay(500);lcd.clear();}
+/*Fabrica D'Cores*/ void defineColor  	(int r, int g, int b){digitalWrite(vm, r);digitalWrite(az, g);digitalWrite(vd, b);}
+/*Desligado*/       void apagado()    	{defineColor(0,0,0);}
+/*Verde*/         	void verde()    	{defineColor(0,0,1);}
+/*Vermelho*/      	void vermelho()   	{defineColor(1,0,0);}
+/*Amarelo*/       	void amarelo()    	{defineColor(1,0,1);}
+
+// Controle de rele
+void motorOf()		{digitalWrite(R1, LOW);  digitalWrite(R0, LOW);}
+void horario()		{digitalWrite(R1, HIGH); digitalWrite(R0, LOW);}
+void antiHorario()	{digitalWrite(R1, LOW);  digitalWrite(R0, HIGH);}
+
+void ligadoHorario()    	{horario(); 	lcd.setCursor(0,0); lcd.print("Motor LIGADO     "); lcd.setCursor(0,1); lcd.print("Girando Horario "); verde();}
+void desligado()      		{motorOf();  	lcd.setCursor(0,0); lcd.print("Motor DESLIGADO  "); lcd.setCursor(0,1); lcd.print("                "); vermelho();}
+void ligadoAntihorario()  	{antiHorario(); lcd.setCursor(0,0); lcd.print("Motor LIGADO     "); lcd.setCursor(0,1); lcd.print("Girando AntiHora"); amarelo();}
 
 void setup()
-{
+{  
+  //Iniciar
+  start();
+  
   //Entradas
-  pinMode(bt1,INPUT);     	//  Botao ligar
-  pinMode(bt2,INPUT);     	//  Botao desligar
-  pinMode(bt3,INPUT);     	//  Botao Inverter
+  pinMode(btm1,INPUT);      //  Botao ligar / desliga
+  pinMode(btm2,INPUT);      //  Botao Inverter
   
   //Saidas
-  pinMode(vm,OUTPUT);     	//  LedRGB porta vermelha
-  pinMode(az,OUTPUT);     	//  LedRGB porta Azul
-  pinMode(vd,OUTPUT);     	//  LedRGB porta Verde
-  pinMode(motor,OUTPUT);    //  Motor
-  pinMode(inverter1,OUTPUT);//  Motor fase + Ivertido
-  pinMode(inverter2,OUTPUT);//  Motor fase - Ivertido
-  
+  pinMode(vm,OUTPUT);       //  LedRGB porta vermelha
+  pinMode(az,OUTPUT);       //  LedRGB porta Azul
+  pinMode(vd,OUTPUT);       //  LedRGB porta Verde
+  pinMode(R1,OUTPUT);    	//  Rele
+  pinMode(R0,OUTPUT);    	//  Rele
 }
 
 void loop()
 {
-  // Verificar entradas
-  if(digitalRead(bt1) == HIGH){ligado = true;    desligado = false;}
-  if(digitalRead(bt2) == HIGH){desligado = true; ligado = false;}
-  if(digitalRead(bt3) == HIGH){estado = estado +1; if(estado > 2){estado = 1;} delay(300);}
+  // Incrementar estados
+  if(digitalRead(btm1) == HIGH && stateButton1 == 0){stateButton1 = 1; stateOperation++;} 
+  if(digitalRead(btm1) == LOW) {stateButton1 = 0;}
   
-  // Girar horario
-  if(estado == 1)
-  {
-    if(ligado == true)
-    {ligar(); piscar(); horario();} else {desligar(); apagado();}
-  }
+  if(digitalRead(btm2) == HIGH && stateButton2 == 0){stateButton2 = 1; stateRotation++;} 
+  if(digitalRead(btm2) == LOW) {stateButton2 = 0;}
   
-  // Girar anti-horario
-  if(estado == 2)
+  // Ciclar estados
+  if(stateOperation > 1){stateOperation = 0;}
+  if(stateRotation > 1){stateRotation = 0;}
+ 
+  if(stateOperation == 1)
   {
-    if(ligado == true)
-    {ligar(); piscar(); antiHorario();} else {desligar(); apagado();}
-  }
+    if(stateRotation == 1){ligadoAntihorario();}
+  else {ligadoHorario();}
+  } else {desligado();} 
+  
 }
-
